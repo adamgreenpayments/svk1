@@ -1,15 +1,24 @@
-<script context="module">
+<!-- <script context="module">
   export async function load({ page, fetch, session, context }) {
     const user = session.user;
     return { user };
   }
-</script>
+</script> -->
 
 <script>
+  import authUser from '$stores/auth.js';
   import { getStores, navigating, page, session } from '$app/stores';
-  export let user;
-  $: ({ user } = $session);
-  $: console.log('two:', { user });
+  export let loggedInUser;
+  authUser.subscribe((user) => {
+				if (user) {
+					loggedInUser = user.attributes;
+				}
+			});
+  $: console.log('two:', { loggedInUser });
 </script>
+{#if loggedInUser}
+logged in poop {loggedInUser.email}
+{:else}
+poop poop
+{/if}
 
-two

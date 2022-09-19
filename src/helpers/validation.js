@@ -9,5 +9,5 @@ export function isValidEmail(val) {
 }
 
 export function isPasswordLongAndSame(pwd, cnfPwd) {
-  return pwd === cnfPwd && pwd.length >= 10;
+  return pwd === cnfPwd && pwd.length >= 8;
 }

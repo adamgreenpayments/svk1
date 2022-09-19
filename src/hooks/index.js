@@ -4,6 +4,7 @@ import { v4 as uuid } from '@lukeed/uuid';
 // import db from '$lib/db';
 
 export async function prepare(incoming) {
+  console.log("poop1a");
   const cookies = cookie.parse(incoming.headers.cookie || '');
 
   const headers = {};
@@ -29,9 +30,12 @@ export async function prepare(incoming) {
  * @returns {any}
  */
 export function getSession({ context }) {
+  console.log("poop2");
+  console.log(context);
   return {
     adnanTest: {
       key1: context.adnanTest?.key1,
+      poop: "poopy"
     },
     user: {
       // only include properties needed client-side —
@@ -43,3 +47,43 @@ export function getSession({ context }) {
     },
   };
 }
+
+
+const publicPages = ['/', '/api'] 
+
+function verifyToken(token) {
+    if (token === 'haha') {
+        return true
+    }
+    return false
+}
+
+
+// export async function handle({ request, render }) {
+//   console.log("poppy33");
+//   console.log(request);
+//   console.log(cookie);
+//   const { token } = cookie.parse(request?.headers?.cookie || '');
+//   console.log(token)
+//   if (token) {
+//       request.locals.isLoggedIn = verifyToken(token)
+//   } else {
+//       // request.locals.isLoggedIn = false
+//   }
+//   const response = await render(request);
+//   if (!request?.locals?.isLoggedIn && !publicPages.includes(request.path)) {
+//    // If you are not logged in and you are not on a public page, 
+//    // it just redirects you to the main page, which is / in this case. 
+//       return {
+//           status: 301,
+//           headers: {
+//               location: '/'
+//           }
+//       };
+//   }
+//   return {
+//       ...response
+//   }
+// }
+
+

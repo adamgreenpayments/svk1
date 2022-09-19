@@ -33,6 +33,7 @@
     console.log('signOut Authenticate.svelte');
 
     cognitoUser = null;
+    $session = {};
     dispatch('signOut');
 
     goto('/');
@@ -46,12 +47,12 @@
   <div id="user-controls">
     <!-- promise was fulfilled -->
     {#if cognitoUser && typeof value !== 'undefined' && value !== null && loaded}
-      {$session.user.email}
+      {cognitoUser.username}
       <Button on:click={signOut} mode="outline">Sign Out</Button>
       <!-- <div transition:fade={{ duration: 1000 }}>
       </div> -->
     {:else if loaded && (typeof value === 'undefined' || value === null)}
-      <Button on:click={() => goto('/signin')}>Sign In</Button>
+      <Button on:click={() => goto('/signin?path='+window.location.pathname)}>Sign In</Button>
       <Button on:click={() => goto('/signup')}>Sign Up</Button>
     {/if}
   </div>

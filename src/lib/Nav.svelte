@@ -37,8 +37,9 @@
 	}
 
 	$: ({ user } = $session);
-	$: console.log('nav:', { user });
+	$: console.log('nav:' +new Date().getTime(), { user });
 	$: console.log({ session });
+	$: console.log( $session );
 
 	onMount(async () => {
 		unsubscribe = authUser.subscribe((user) => {

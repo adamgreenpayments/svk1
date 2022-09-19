@@ -41,8 +41,8 @@
 	import amplifyStore from '$stores/amplify';
 	import { checkUser } from '$lib/Auth/aws';
 	import authUser from '$stores/auth.js';
-
-	import Amplify, { API, Auth, graphqlOperation, Storage } from 'aws-amplify';
+	import { Amplify } from '@aws-amplify/core'
+	import { API, Auth, graphqlOperation, Storage } from 'aws-amplify';
 	Amplify.configure(awsconfig);
 
 	let segment;
@@ -51,16 +51,18 @@
 
 	$: if (cognitoUser) {
 		console.log('layout, cognito user:', { cognitoUser });
-		$session.user.email = cognitoUser.attributes.email;
+		console.log('email:', cognitoUser.attributes.email );
 		console.log({ session });
-		console.log('session.user', $session.user);
+		console.log('session.user', $session);
+		console.log(authUser.getValue);
 
 		/** a.s. this example below is set in src/setup/index.js
 		 * renamed to src/hooks/index.js
 		 */
 		console.log('session.adnanTest', $session.adnanTest);
-
-		goto('/');
+		const urlParams = new URLSearchParams(window.location.search);
+		const path = window.location.pathname;
+		goto(path);
 	}
 
 	onMount(async () => {
@@ -108,6 +110,7 @@
 				console.log('layout: !cognitoUser');
 
 				const res = await checkUser();
+				console.log(res);
 				authUser.setauthUser(res);
 			}
 		} catch (error) {

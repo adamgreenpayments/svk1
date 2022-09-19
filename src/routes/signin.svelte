@@ -7,7 +7,6 @@
   import TextInput from '$lib/UI/TextInput.svelte';
   import Button from '$lib/UI/Button.svelte';
   import { isEmpty, isValidEmail } from '../helpers/validation.js';
-
   let email = '';
   let password = '';
   let isLoggingIn = false;
@@ -17,12 +16,23 @@
   $: emailValid = isValidEmail(email);
   $: formIsValid = emailValid;
 
+  // import { base } from '$app/paths'
+
+  // let previousPage = base ;
+
+  // afterNavigate(({from}) => {
+  //   previousPage = from?.url.pathname || previousPage
+  // }) 
+
   async function handleSignIn() {
     isLoggingIn = true;
+    const urlParams = new URLSearchParams(window.location.search);
+    const path = urlParams.get("path") ? urlParams.get("path") : '/';
+    console.log("urlParams: ", path)
     const res = await SignIn(email, password);
     authUser.setauthUser(res);
     isLoggingIn = false;
-    goto('/');
+    goto(path);
   }
 
   onMount(() => {

@@ -5,6 +5,7 @@ import {
 const authUser = writable(null);
 
 const customAuthStore = {
+  getValue: authUser.item,
   subscribe: authUser.subscribe,
   setauthUser: (item) => {
     authUser.set(item);
