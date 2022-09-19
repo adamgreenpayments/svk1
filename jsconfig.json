@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"module": "ESNext",
 		"baseUrl": ".",
 		"paths": {
 			"$app/*": [".svelte/dev/runtime/app/*", ".svelte/build/runtime/app/*"],

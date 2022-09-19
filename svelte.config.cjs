@@ -1,14 +1,15 @@
 // const node = require('@sveltejs/adapter-node');
-const st = require('@sveltejs/adapter-static');
+import st from '@sveltejs/adapter-static';
 // import st from '@sveltejs/adapter-static';
 
-const { resolveConfig } = require('vite');
-const pkg = require('./package.json');
-const { resolve } = require('path');
-const sveltePreprocess = require('svelte-preprocess');
+import { resolveConfig } from 'vite';
+import pkg from './package.json';
+// import { resolve } from 'path';
+import sveltePreprocess from 'svelte-preprocess';
+
 
 /** @type {import('@sveltejs/kit').Config} */
-module.exports = {
+export default {
 
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
@@ -25,7 +26,6 @@ module.exports = {
 		// You can create optimized builds for different platforms by
 		// specifying a different adapter
 		// adapter: node(),
-		// adapter: st(),
 		adapter: st(),
 
 		// hydrate the <div id="svelte"> element in src/app.html
@@ -47,11 +47,11 @@ module.exports = {
 				}
 			},
 			resolve: {
-				alias: {
-					'./runtimeConfig': './runtimeConfig.browser',
-					$stores: resolve(__dirname, './src/stores'),
-					$components: resolve(__dirname, './src/components')
-				}
+				// alias: {
+				// 	'./runtimeConfig': './runtimeConfig.browser',
+				// 	$stores: resolve(__dirname, './src/stores'),
+				// 	$components: resolve(__dirname, './src/components')
+				// }
 			}
 		}
 	}
