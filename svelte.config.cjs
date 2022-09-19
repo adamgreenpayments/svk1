@@ -1,5 +1,6 @@
 // const node = require('@sveltejs/adapter-node');
 const st = require('@sveltejs/adapter-static');
+// import st from '@sveltejs/adapter-static';
 
 const { resolveConfig } = require('vite');
 const pkg = require('./package.json');
@@ -8,6 +9,7 @@ const sveltePreprocess = require('svelte-preprocess');
 
 /** @type {import('@sveltejs/kit').Config} */
 module.exports = {
+
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
 	preprocess: [
@@ -23,6 +25,7 @@ module.exports = {
 		// You can create optimized builds for different platforms by
 		// specifying a different adapter
 		// adapter: node(),
+		// adapter: st(),
 		adapter: st(),
 
 		// hydrate the <div id="svelte"> element in src/app.html
@@ -33,9 +36,9 @@ module.exports = {
 			 * a.s. uncomment below when building w/ npm run build
 			 * comment when using: npm run dev
 			 */
-			// ssr: {
-			// 	noExternal: Object.keys(pkg.dependencies || {})
-			// },
+			ssr: {
+				noExternal: Object.keys(pkg.dependencies || {})
+			},
 			build: {
 				rollupOptions: {
 					output: {
