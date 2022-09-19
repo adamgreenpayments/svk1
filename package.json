@@ -11,7 +11,7 @@
 	"dependencies": {
 		"aws-amplify": "^3.3.8",
 		"aws-sdk": "2.874.0"
-	},
+	}, 
 	"devDependencies": {
 		"@lukeed/uuid": "^2.0.0",
 		"@rollup/plugin-json": "^4.1.0",
