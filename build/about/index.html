@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="global.css" />
+
+	<link rel="icon" href="/favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>About</title>
+
+
+
+<link rel="modulepreload" href="/./_app/start-7200f40d.js">
+			<link rel="modulepreload" href="/./_app/chunks/index-2b079c53.js">
+			<link rel="modulepreload" href="/./_app/chunks/aws-add3e71f.js">
+			<link rel="modulepreload" href="/./_app/chunks/auth-d2666f70.js">
+			<link rel="modulepreload" href="/./_app/pages/about/index.svelte-7ceeb6fa.js">
+			<link rel="stylesheet" href="/./_app/assets/start-f4790350.css">
+			<link rel="stylesheet" href="/./_app/assets/aws-d93494e5.css">
+
+
+		<script type="module">
+			import { start } from "/./_app/start-7200f40d.js";
+			start({
+				target: document.querySelector("#svelte"),
+				paths: {"base":"","assets":"/."},
+				status: 200,
+				error: null,
+				session: (function(a){return {adnanTest:{key1:a,poop:"poopy"},user:{name:a,email:a,avatar:a}}}(void 0)),
+				nodes: [
+					import("/./_app/pages/about/index.svelte-7ceeb6fa.js")
+				],
+				page: {
+					host: "location.host",
+					path: "/about",
+					query: new URLSearchParams(""),
+					params: {}
+				}
+			});
+		</script>
+</head>
+
+<body>
+	<div id="svelte">
+
+
+<nav class="nav-dev svelte-1o703b3"><ul class="svelte-1o703b3"><li class="svelte-1o703b3"><a href="." class="svelte-1o703b3">home </a></li>
+<li class="svelte-1o703b3"><a aria-current="page" href="about" class="svelte-1o703b3">about </a></li>
+<li class="svelte-1o703b3"><a href="two" class="svelte-1o703b3">two </a></li>
+<li class="svelte-1o703b3"><a href="three" class="svelte-1o703b3">three </a></li>
+
+
+
+
+<li style="float:right;" class="svelte-1o703b3">
+  <div id="user-controls" class="svelte-iu0h20">
+    </div>
+  
+
+
+
+
+</li></ul></nav>
+
+
+
+<main>
+<h1>about</h1>
+<p>this is the about page</p>
+</main>
+
+
+
+	
+</div>
+</body>
+
+</html>
+<!-- https://github.com/aws/aws-amplify/issues/678 fix: -->
+<script>
+
+	const isBrowser = () => typeof window !== 'undefined';
+	const isGlobal = () => typeof global !== 'undefined';
+
+	// https://github.com/aws-amplify/amplify-js/issues/7499#issuecomment-804386820
+	var exports = {};
+
+	if (!isGlobal() && isBrowser()) {
+		var global = window;
+	}
+
+</script>
+<!-- https://github.com/aws/aws-amplify/issues/678 fix end-->
