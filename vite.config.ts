@@ -9,6 +9,7 @@ const config: UserConfig = {
 // import { resolve } from 'path';
 // /** @type {import('vite').UserConfig} */
 // const config = {
+        appType: "custom",
         plugins: [sveltekit()],
         ssr: {
             noExternal: Object.keys(pkg.dependencies || {})

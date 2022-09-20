@@ -28,11 +28,12 @@
     isLoggingIn = true;
     const urlParams = new URLSearchParams(window.location.search);
     const path = urlParams.get("path") ? urlParams.get("path") : '/';
-    console.log("urlParams: ", path)
+    console.log("urlParams: ", path);
     const res = await SignIn(email, password);
     authUser.setauthUser(res);
     isLoggingIn = false;
-    goto(path);
+    console.log("goto: ", path);
+    setTimeout(() =>  goto(path), 1000);
   }
 
   onMount(() => {
