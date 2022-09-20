@@ -1,6 +1,6 @@
 <script>
-	import { dev } from '$app/env';
-	import Layout from './$layout.svelte';
+	import { dev } from '$app/environment';
+	import Layout from './+layout.svelte';
 
 	export let error, status;
 </script>

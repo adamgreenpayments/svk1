@@ -1,14 +1,14 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	// import amplifyStore from '../stores/amplify';
-	// import isAdminStore from '../stores/admin.js';
-	// import authUser from '../stores/auth.js';
+	// import isAdminStore from '../stores/admin';
+	// import authUser from '../stores/auth';
 
 	import amplifyStore from '$stores/amplify';
-	import isAdminStore from '$stores/admin.js';
-	import authUser from '$stores/auth.js';
+	import isAdminStore from '$stores/admin';
+	import authUser from '$stores/auth';
 
-	import { page, session } from '$app/stores';
+	import { page } from '$app/stores';
 
 	import User from '$lib/Auth/User.svelte';
 	import { checkUser, signOut } from './Auth/aws';
@@ -36,10 +36,10 @@
 		isAdminStore.setIsAdmin(isAdmin);
 	}
 
-	$: ({ user } = $session);
-	$: console.log('nav:' +new Date().getTime(), { user });
-	$: console.log({ session });
-	$: console.log( $session );
+	// $: ({ user } = $session);
+	// $: console.log('nav:' +new Date().getTime(), { user });
+	// $: console.log({ session });
+	// $: console.log( $session );
 
 	onMount(async () => {
 		unsubscribe = authUser.subscribe((user) => {
@@ -138,16 +138,16 @@
 <nav class="nav-dev">
 	<ul>
 		<li>
-			<a aria-current={$page.path === '/' ? 'page' : undefined} href="."> home </a>
+			<a aria-current={$page.url.pathname === '/' ? 'page' : undefined} href="."> home </a>
 		</li>
 		<li>
-			<a aria-current={$page.path === '/about' ? 'page' : undefined} href="about"> about </a>
+			<a aria-current={$page.url.pathname === '/about' ? 'page' : undefined} href="about"> about </a>
 		</li>
 		<li>
-			<a aria-current={$page.path === '/two' ? 'page' : undefined} href="two"> two </a>
+			<a aria-current={$page.url.pathname === '/two' ? 'page' : undefined} href="two"> two </a>
 		</li>
 		<li>
-			<a aria-current={$page.path === '/three' ? 'page' : undefined} href="three"> three </a>
+			<a aria-current={$page.url.pathname === '/three' ? 'page' : undefined} href="three"> three </a>
 		</li>
 
 		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches

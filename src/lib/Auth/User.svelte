@@ -1,11 +1,11 @@
 <script>
   import { goto } from '$app/navigation';
-  import { getStores, navigating, page, session } from '$app/stores';
+  import { getStores, navigating, page } from '$app/stores';
   // import * as api from '$lib/api.js';
 
   import { createEventDispatcher, onMount, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
-  import authUser from '../../stores/auth.js';
+  import authUser from '../../stores/auth';
   import Button from '$lib/UI/Button.svelte';
   import LoadingSpinner from '$lib/UI/LoadingSpinner.svelte';
 
@@ -33,7 +33,7 @@
     console.log('signOut Authenticate.svelte');
 
     cognitoUser = null;
-    $session = {};
+    // $session = {};
     dispatch('signOut');
 
     goto('/');

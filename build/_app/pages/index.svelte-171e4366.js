@@ -1,1 +1,0 @@
-import{S as s,i as a,s as t,l,m as c,p as e,d as n,q as i,a as r,n as h}from"../chunks/index-2b079c53.js";function o(s){let a;return{c(){a=l("main"),this.h()},l(s){a=c(s,"MAIN",{class:!0}),e(a).forEach(n),this.h()},h(){i(a,"class","svelte-1u0sbml")},m(s,t){r(s,a,t)},p:h,i:h,o:h,d(s){s&&n(a)}}}export default class extends s{constructor(s){super(),a(this,s,null,o,t,{})}}

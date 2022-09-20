@@ -13,7 +13,7 @@ unsubscribeAmplify = amplify.subscribe(async (amp) => {
 unsubscribeAuth = amplify.subscribeAuth(async (amp) => {
 	if (amp) {
 		Auth = amp;
-		console.log('Auth/aws.js:', { Auth });
+		console.log('Auth/aws:', { Auth });
 	}
 });
 
