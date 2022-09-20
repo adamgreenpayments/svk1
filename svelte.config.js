@@ -27,7 +27,7 @@ export default {
 		// specifying a different adapter
 		// adapter: node(),
 		adapter: adapter(),
-
+		outDir: './builddist'
 		// hydrate the <div id="svelte"> element in src/app.html
 		// target: '#svelte',
 

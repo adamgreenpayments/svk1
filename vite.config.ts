@@ -14,7 +14,7 @@ const config: UserConfig = {
             noExternal: Object.keys(pkg.dependencies || {})
         },
         build: {
-            // outDir: '../build',
+            // outDir: './builddist'
             // rollupOptions: {
             //     output: {
             //         intro: 'if(exports === undefined){var exports ={}; var self = {}}'
