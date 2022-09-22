@@ -75,7 +75,6 @@
 
 <main>
   {#if isLoggingIn}
-    <LoadingSpinner />
   {/if}
 
   {#if isSignup}

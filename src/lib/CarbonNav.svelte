@@ -151,7 +151,7 @@ onDestroy(() => {
                     <SideNavLink  text="home" href="/" />
                     <SideNavLink icon={IbmPowerVs} text="two" href="/two" />
                     <SideNavLink icon={IbmPowerVs} text="three" href="/three" />
-                    <SideNavMenu icon={IbmPowerVs} text="Menu">
+                    <SideNavMenu expanded={true} icon={IbmPowerVs} text="Menu">
                         <SideNavMenuItem text="home" href="/" />
                         <SideNavMenuItem text="two" href="/two" />
                         <SideNavMenuItem text="three" href="/three" />

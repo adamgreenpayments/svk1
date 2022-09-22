@@ -1,7 +1,8 @@
 // const node = require('@sveltejs/adapter-node');
-// import st from '@sveltejs/adapter-static';
-// import st from '@sveltejs/adapter-static';
-import st from '@sveltejs/adapter-auto';
+// import adapter from '@sveltejs/adapter-static';
+// import adapter from '@sveltejs/adapter-static';
+// import adapter from '@sveltejs/adapter-auto';
+import { adapter } from 'sveltekit-adapter-aws';
 
 import { resolveConfig } from 'vite';
 import { optimizeImports } from "carbon-preprocess-svelte";
@@ -25,8 +26,10 @@ export default {
 		// You can create optimized builds for different platforms by
 		// specifying a different adapter
 		// adapter: node(),
-		adapter: st()
-		
+		adapter: adapter({
+			autoDeploy: true,
+			FQDN: "omniaccept.adambasloe.com"
+		})
 		// hydrate the <div id="svelte"> element in src/app.html
 		// target: '#svelte',
 

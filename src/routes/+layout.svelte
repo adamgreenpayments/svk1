@@ -9,9 +9,7 @@
 import Theme from "carbon-components-svelte/src/Theme/Theme.svelte";
 import "carbon-components-svelte/css/all.css";
 import "../app.css";
-import {
-    themeChange
-} from 'theme-change'
+
 import '../app.css'
 import {
     browser,
@@ -73,7 +71,6 @@ $: if (cognitoUser) {
 onMount(async () => {
     // let theme = "white"; // "white" | "g10" | "g80" | "g90" | "g100"
     // document.documentElement.setAttribute("theme", theme);
-    themeChange(false);
     unsubscribe = authUser.subscribe((user) => {
         if (user) {
             cognitoUser = user;
