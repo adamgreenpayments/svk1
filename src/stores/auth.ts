@@ -1,17 +1,18 @@
 import {
   writable
 } from 'svelte/store';
+import type { CognitoUser } from '@aws-amplify/auth';
 
-const authUser = writable(null);
+const authUser = writable<CognitoUser | undefined>();
 
 const customAuthStore = {
-  getValue: authUser.item,
+  get: () => authUser,
   subscribe: authUser.subscribe,
-  setauthUser: (item) => {
+  setauthUser: (item: CognitoUser) => {
     authUser.set(item);
   },
   removeauthUser: () => {
-    authUser.set(null);
+    authUser.set(undefined);
   },
 };
 

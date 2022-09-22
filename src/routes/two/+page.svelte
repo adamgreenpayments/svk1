@@ -8,6 +8,8 @@
 <script>
   import authUser from '$stores/auth';
   import { getStores, navigating, page } from '$app/stores';
+	import { Datepicker } from 'svelte-calendar';
+
   export let loggedInUser;
   authUser.subscribe((user) => {
 				if (user) {
@@ -18,6 +20,7 @@
 </script>
 {#if loggedInUser}
 logged in poop {loggedInUser.email}
+<Datepicker />
 {:else}
 poop poop
 {/if}

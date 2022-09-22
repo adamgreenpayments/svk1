@@ -1,11 +1,12 @@
 // const node = require('@sveltejs/adapter-node');
 // import st from '@sveltejs/adapter-static';
-import st from '@sveltejs/adapter-static';
-// import st from '@sveltejs/adapter-auto';
+// import st from '@sveltejs/adapter-static';
+import st from '@sveltejs/adapter-auto';
 
 import { resolveConfig } from 'vite';
+import { optimizeImports } from "carbon-preprocess-svelte";
 
-import sveltePreprocess from 'svelte-preprocess';
+import preprocess from 'svelte-preprocess';
 
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -14,12 +15,10 @@ export default {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
 	preprocess: [
-		sveltePreprocess({
-			defaults: {
-				style: 'postcss'
-			},
-			postcss: false
-		})
+		// optimizeImports(),
+		preprocess({
+			postcss: true,
+		  }),
 	], 
 	kit: {
 		// By default, `npm run build` will create a standard Node app.
@@ -27,6 +26,7 @@ export default {
 		// specifying a different adapter
 		// adapter: node(),
 		adapter: st()
+		
 		// hydrate the <div id="svelte"> element in src/app.html
 		// target: '#svelte',
 

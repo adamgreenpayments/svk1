@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { goto } from '$app/navigation';
   import { getStores, navigating, page } from '$app/stores';
   // import * as api from '$lib/api.js';
@@ -6,15 +6,30 @@
   import { createEventDispatcher, onMount, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import authUser from '../../stores/auth';
-  import Button from '$lib/UI/Button.svelte';
-  import LoadingSpinner from '$lib/UI/LoadingSpinner.svelte';
+	import type { Unsubscriber } from 'svelte/store';
+  import type { CognitoUser } from '@aws-amplify/auth';
+	import { Button } from 'carbon-components-svelte';
 
   const dispatch = createEventDispatcher();
-  let unsubscribe;
+  let unsubscribe:Unsubscriber;
   let loaded = false;
-  let cognitoUser;
+  let cognitoUser:OrNull<CognitoUser>;
 
+
+  
   $: signedIn = cognitoUser;
+  $: {
+    console.log("big poop");
+    dispatch(cognitoUser ? cognitoUser.getUsername() : "logout");
+  }
+
+  function butttonClicked() {
+    dispatch("message",{
+			text: "closeDrawers"
+		});
+    return true;
+  }
+
 
   onMount(() => {
     unsubscribe = authUser.subscribe((user) => {
@@ -22,6 +37,8 @@
         cognitoUser = user;
       }
       loaded = true;
+      console.log("kaka");
+
     });
   });
 
@@ -32,30 +49,43 @@
   async function signOut() {
     console.log('signOut Authenticate.svelte');
 
-    cognitoUser = null;
+    authUser.removeauthUser();
     // $session = {};
-    dispatch('signOut');
+    
 
     goto('/');
   }
 </script>
 
+
 {#await cognitoUser}
   <!-- promise is pending -->
-  <LoadingSpinner />
+  <!-- <LoadingSpinner /> -->
+  <!-- <button disabled on:click={() => goto('/signin?path='+window.location.pathname)}>Sign In</button>
+  <button disabled on:click={() => goto('/signup')}>Sign Up</button> -->
 {:then value}
-  <div id="user-controls">
     <!-- promise was fulfilled -->
     {#if cognitoUser && typeof value !== 'undefined' && value !== null && loaded}
-      {cognitoUser.username}
-      <Button on:click={signOut} mode="outline">Sign Out</Button>
+    <div class="mb-3">
+      <h5>
+      {cognitoUser.getUsername()}
+      </h5>
+    </div>
+    <div class="pb-3">
+      <!-- <button on:click={signOut} >Sign Out</button> -->
+      <a class="btn btn-secondary h-8 px-4 text-sm" href="/#" on:click={signOut}>Logout</a>
+      <!-- <button class="btn btn-ghost" on:click={signOut}>Logout</button> -->
+    </div>
+      <!-- <Button size='small' kind='tertiary' disabled={false}>Button</Button> -->
       <!-- <div transition:fade={{ duration: 1000 }}>
       </div> -->
     {:else if loaded && (typeof value === 'undefined' || value === null)}
-      <Button on:click={() => goto('/signin?path='+window.location.pathname)}>Sign In</Button>
-      <Button on:click={() => goto('/signup')}>Sign Up</Button>
+   
+        <a class="btn btn-secondary" href="/#" on:click={() => butttonClicked() && goto('/signin?path='+window.location.pathname)} >Login</a>
+        <a class="btn btn-secondary" href="/#"  on:click={() => butttonClicked() && goto('/signup')} >Signup</a>
+      <!-- <button on:click={() => goto('/signin?path='+window.location.pathname)}>Sign In</button>
+      <button on:click={() => goto('/signup')}>Sign Up</button> -->
     {/if}
-  </div>
   <!-- <div transition:fade={{ duration: 2000 }}>
   </div> -->
 {/await}
@@ -73,13 +103,3 @@
     {/if}
   </div>
 {/if} -->
-<style>
-  #user-controls {
-    margin-top: 0.3rem;
-    /* display: flex; */
-    /* justify-content: space-between; */
-    /* margin-left: auto;
-    margin-right: 1rem; */
-    /* float: right; */
-  }
-</style>

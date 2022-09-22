@@ -2,10 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
   import { SignUp, SignIn, ConfirmSignUp } from '$lib/Auth/aws';
-  import LoadingSpinner from '$lib/UI/LoadingSpinner.svelte';
   import authUser from '../../stores/auth';
-  import TextInput from '$lib/UI/TextInput.svelte';
-  import Button from '$lib/UI/Button.svelte';
   import {
     isEmpty,
     isValidEmail,
@@ -83,7 +80,7 @@
 
   {#if isSignup}
     <form on:submit|preventDefault={handleSignUp}>
-      <TextInput
+      <input
         id="email"
         label="E-Mail"
         type="email"
@@ -93,7 +90,7 @@
         on:input={(event) => (email = event.target.value)}
       />
 
-      <TextInput
+      <input
         id="Password"
         label="Password"
         type="password"
@@ -102,7 +99,7 @@
         autocomplete="on"
       />
 
-      <TextInput
+      <input
         id="Password"
         label="Confirm Password"
         type="password"
@@ -111,12 +108,12 @@
         autocomplete="on"
       />
 
-      <Button type="submit" disabled={!formIsValid}>Sign Up</Button>
+      <button type="submit" disabled={!formIsValid}>Sign Up</button>
     </form>
   {:else if isConfirmation}
     <h3>Please check your email for the code.</h3>
     <form on:submit|preventDefault={handleConfirmation}>
-      <TextInput
+      <input
         id="confirmationCode"
         label="Confirmation Code"
         type="text"
@@ -124,7 +121,7 @@
         on:input={(event) => (confirmationCode = event.target.value)}
       />
 
-      <Button type="submit" disabled={!confirmationCode}>Confirm</Button>
+      <button type="submit" disabled={!confirmationCode}>Confirm</button>
     </form>
   {:else}
     <!-- else content here -->
