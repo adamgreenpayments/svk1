@@ -1,94 +1,67 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { getStores, navigating, page } from '$app/stores';
-  // import * as api from '$lib/api.js';
+	import { goto } from '$app/navigation';
+	import { getStores, navigating, page } from '$app/stores';
+	// import * as api from '$lib/api.js';
 
-  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-  import { fade } from 'svelte/transition';
-  import authUser from '../../stores/auth';
+	import { createEventDispatcher, onMount, onDestroy, getContext } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import type { Unsubscriber } from 'svelte/store';
-  import type { CognitoUser } from '@aws-amplify/auth';
-	import { Button } from 'carbon-components-svelte';
+	import type { CognitoUser } from '@aws-amplify/auth';
+	import { Button, Loading } from 'carbon-components-svelte';
+	import type { Writable } from 'svelte/store';
+	const authStore: Writable<CognitoUser | undefined> = getContext('authStore');
 
-  const dispatch = createEventDispatcher();
-  let unsubscribe:Unsubscriber;
-  let loaded = false;
-  let cognitoUser:OrNull<CognitoUser>;
+	const dispatch = createEventDispatcher();
+	let loaded = false;
 
-
-  
-  $: signedIn = cognitoUser;
-  $: {
-    console.log("big poop");
-    dispatch(cognitoUser ? cognitoUser.getUsername() : "logout");
-  }
-
-  function butttonClicked() {
-    dispatch("message",{
-			text: "closeDrawers"
+	function butttonClicked() {
+		dispatch('message', {
+			text: 'closeDrawers'
 		});
-    return true;
-  }
+		return true;
+	}
 
+	onMount(() => {
+		loaded = true;
+		console.log('kaka');
+	});
 
-  onMount(() => {
-    unsubscribe = authUser.subscribe((user) => {
-      if (user) {
-        cognitoUser = user;
-      }
-      loaded = true;
-      console.log("kaka");
+	async function signOut() {
+		console.log('signOut Authenticate.svelte');
 
-    });
-  });
+		authStore.set(undefined);
+		// $session = {};
 
-  onDestroy(() => {
-    if (unsubscribe) unsubscribe();
-  });
-
-  async function signOut() {
-    console.log('signOut Authenticate.svelte');
-
-    authUser.removeauthUser();
-    // $session = {};
-    
-
-    goto('/');
-  }
+		// goto('/');
+	}
 </script>
 
-
-{#await cognitoUser}
-  <!-- promise is pending -->
-  <!-- <LoadingSpinner /> -->
-  <!-- <button disabled on:click={() => goto('/signin?path='+window.location.pathname)}>Sign In</button>
-  <button disabled on:click={() => goto('/signup')}>Sign Up</button> -->
-{:then value}
-    <!-- promise was fulfilled -->
-    {#if cognitoUser && typeof value !== 'undefined' && value !== null && loaded}
-    <div class="mb-3">
-      <h5>
-      {cognitoUser.getUsername()}
-      </h5>
-    </div>
-    <div class="pb-3">
-      <!-- <button on:click={signOut} >Sign Out</button> -->
-      <a class="btn btn-secondary h-8 px-4 text-sm" href="/#" on:click={signOut}>Logout</a>
-      <!-- <button class="btn btn-ghost" on:click={signOut}>Logout</button> -->
-    </div>
-      <!-- <Button size='small' kind='tertiary' disabled={false}>Button</Button> -->
-      <!-- <div transition:fade={{ duration: 1000 }}>
+{#if $authStore && loaded}
+	<div class="mb-3">
+		<h5>
+			{$authStore.getUsername()}
+		</h5>
+	</div>
+	<div class="pb-3">
+		<!-- <button on:click={signOut} >Sign Out</button> -->
+		<a class="btn btn-secondary h-8 px-4 text-sm" href="/#" on:click={signOut}>Logout</a>
+		<!-- <button class="btn btn-ghost" on:click={signOut}>Logout</button> -->
+	</div>
+	<!-- <Button size='small' kind='tertiary' disabled={false}>Button</Button> -->
+	<!-- <div transition:fade={{ duration: 1000 }}>
       </div> -->
-    {:else if loaded && (typeof value === 'undefined' || value === null)}
-   
-        <a class="btn btn-secondary" href="/#" on:click={() => butttonClicked() && goto('/signin?path='+window.location.pathname)} >Login</a>
-        <a class="btn btn-secondary" href="/#"  on:click={() => butttonClicked() && goto('/signup')} >Signup</a>
-      <!-- <button on:click={() => goto('/signin?path='+window.location.pathname)}>Sign In</button>
-      <button on:click={() => goto('/signup')}>Sign Up</button> -->
-    {/if}
-  <!-- <div transition:fade={{ duration: 2000 }}>
-  </div> -->
-{/await}
+{:else if loaded}
+	<!-- <a class="btn btn-secondary" href="/#" on:click={() => butttonClicked() && goto('/signin?path='+window.location.pathname)} >Login</a>
+        <a class="btn btn-secondary" href="/#"  on:click={() => butttonClicked() && goto('/signup')} >Signup</a> -->
+	<button class="btn btn-secondary h-8 px-4 text-sm" on:click={() => goto('/signin')}
+		>Sign In</button
+	>
+	<button class="btn btn-secondary h-8 px-4 text-sm" on:click={() => goto('/signup')}
+		>Sign Up</button
+	>
+{:else}
+	<Loading description="Active loading indicator" withOverlay={false} />
+{/if}
 
 <!-- {cognitoUser.attributes.email} -->
 

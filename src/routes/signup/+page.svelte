@@ -1,130 +1,124 @@
-<script>
-  import { onMount, onDestroy } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { SignUp, SignIn, ConfirmSignUp } from '$lib/Auth/aws';
-  import authUser from '../../stores/auth';
-  import {
-    isEmpty,
-    isValidEmail,
-    isPasswordLongAndSame,
-  } from '../../helpers/validation.js';
+<script lang="ts">
+	import { onMount, onDestroy, getContext } from 'svelte';
+	import { SignUp, SignIn, ConfirmSignUp } from '$lib/Auth/aws';
+	import { isEmpty, isValidEmail, isPasswordLongAndSame } from '../../helpers/validation.js';
+	import { base } from '$app/paths';
+	import type { Writable } from 'svelte/store';
+	import { goto, afterNavigate } from '$app/navigation';
+	import { Button, FluidForm, TextInput, PasswordInput, Loading } from 'carbon-components-svelte';
+	import type { CognitoUser } from '@aws-amplify/auth';
 
-  let email = '';
-  let password = '';
-  let confirmPassword = '';
-  let isLoggingIn = false;
-  let unsubscribe;
-  let cognitoUser;
-  let isSignup = true;
-  let isConfirmation = false;
-  let confirmationCode = '';
+	let previousPage: string = base;
 
-  $: emailValid = isValidEmail(email);
-  $: passwordValid = isPasswordLongAndSame(password, confirmPassword);
-  $: formIsValid = emailValid && passwordValid;
+	afterNavigate(({ from }) => {
+		previousPage = from?.url.pathname || previousPage;
+		console.log('prev paghe2', previousPage);
+	});
+	const authStore: Writable<CognitoUser | undefined> = getContext('authStore');
 
-  async function handleConfirmation() {
-    try {
-      isLoggingIn = true;
+	$: console.log('prev paghe', previousPage);
+	let email: String | undefined = '';
+	let password: String | undefined = '';
+	let confirmPassword: String | undefined = '';
+	let isLoggingIn = false;
+	let isSignup = true;
+	let isConfirmation = false;
+	let confirmationCode = '';
 
-      const resCnf = await ConfirmSignUp(email, confirmationCode);
-      console.log({ resCnf });
+	$: emailValid = isValidEmail(email);
+	$: passwordValid = isPasswordLongAndSame(password, confirmPassword);
+	$: formIsValid = emailValid && passwordValid;
 
-      if (resCnf === 'SUCCESS') {
-        const resSgnIn = await SignIn(email, password);
-        authUser.setauthUser(resSgnIn);
-        console.log({ resSgnIn });
-        isLoggingIn = false;
-        goto('/');
-      } else {
-        isLoggingIn = false;
-        alert('Wrong confirmation code!');
-      }
-    } catch (e) {
-      alert(e.message);
-      isLoggingIn = true;
-    }
-  }
+	function handleConfirmation() {
+		isLoggingIn = true;
 
-  async function handleSignUp() {
-    isLoggingIn = true;
-    const res = await SignUp(email, password);
-    console.log({ res });
+		ConfirmSignUp(email, confirmationCode).then((resCnf) => {
+			if (resCnf === 'SUCCESS') {
+				const resSgnIn = SignIn(email, password);
+				resSgnIn.then((user) => {
+					authStore.set(user);
+					isLoggingIn = false;
+				});
+			} else {
+				isLoggingIn = false;
+				alert('Wrong confirmation code!');
+			}
+		});
+	}
 
-    isConfirmation = true;
-    isSignup = false;
-    // authUser.setauthUser(res);
-    isLoggingIn = false;
-    // goto("/");
-  }
+	async function handleSignUp() {
+		isLoggingIn = true;
+		const res = await SignUp(email, password);
+		console.log({ res });
+		isConfirmation = true;
+		isSignup = false;
+		isLoggingIn = false;
+	}
 
-  onMount(() => {
-    unsubscribe = authUser.subscribe((user) => {
-      cognitoUser = user;
-    });
-  });
+	onMount(() => {});
 
-  onDestroy(() => {
-    if (unsubscribe) unsubscribe();
-  });
+	onDestroy(() => {});
 </script>
 
 <svelte:head>
-  <title>MaRS Connected: Sign Up</title>
+	<title>MaRS Connected: Sign Up</title>
 </svelte:head>
 
 <main>
-  {#if isLoggingIn}
-  {/if}
+	{#if $authStore}
+		{goto(previousPage)}
+	{:else if isLoggingIn}
+		<div class="w-2/5 mx-auto">
+			<Loading description="Active loading indicator" withOverlay={false} />
+		</div>
+	{:else if isSignup}
+		<FluidForm class="w-2/5 mx-auto">
+			<TextInput
+				id="email"
+				label="E-Mail"
+				type="email"
+				invalid={!emailValid}
+				invalidText="Please enter a valid email address."
+				value={email}
+				on:input={(event) => (email = event?.detail?.toString())}
+			/>
 
-  {#if isSignup}
-    <form on:submit|preventDefault={handleSignUp}>
-      <input
-        id="email"
-        label="E-Mail"
-        type="email"
-        valid={emailValid}
-        validityMessage="Please enter a valid email address."
-        value={email}
-        on:input={(event) => (email = event.target.value)}
-      />
+			<TextInput
+				id="Password"
+				label="Password"
+				type="password"
+				value={password}
+				on:input={(event) => (password = event?.detail?.toString())}
+				autocomplete="on"
+			/>
 
-      <input
-        id="Password"
-        label="Password"
-        type="password"
-        value={password}
-        on:input={(event) => (password = event.target.value)}
-        autocomplete="on"
-      />
-
-      <input
-        id="Password"
-        label="Confirm Password"
-        type="password"
-        value={confirmPassword}
-        on:input={(event) => (confirmPassword = event.target.value)}
-        autocomplete="on"
-      />
-
-      <button type="submit" disabled={!formIsValid}>Sign Up</button>
-    </form>
-  {:else if isConfirmation}
-    <h3>Please check your email for the code.</h3>
-    <form on:submit|preventDefault={handleConfirmation}>
-      <input
-        id="confirmationCode"
-        label="Confirmation Code"
-        type="text"
-        value={confirmationCode}
-        on:input={(event) => (confirmationCode = event.target.value)}
-      />
-
-      <button type="submit" disabled={!confirmationCode}>Confirm</button>
-    </form>
-  {:else}
-    <!-- else content here -->
-  {/if}
+			<TextInput
+				id="Password"
+				label="Confirm Password"
+				type="password"
+				value={confirmPassword}
+				on:input={(event) => (confirmPassword = event?.detail?.toString())}
+				autocomplete="on"
+			/>
+			<Button type="submit" on:click={handleSignUp} disabled={!formIsValid}>Sign Up</Button>
+		</FluidForm>
+	{:else if isConfirmation}
+		<h3>Please check your email for the code.</h3>
+		<FluidForm class="w-2/5 mx-auto">
+			<TextInput
+				id="confirmationCode"
+				label="Confirmation Code"
+				type="text"
+				value={confirmationCode}
+				on:input={(event) => (confirmationCode = event.target.value)}
+			/>
+			<Button type="submit" on:click={handleConfirmation} disabled={!confirmationCode}
+				>Confirm</Button
+			>
+		</FluidForm>
+	{:else}
+		<!-- else content here -->
+	{/if}
 </main>
 
 <style>

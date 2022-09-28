@@ -19,7 +19,7 @@ unsubscribeAuth = amplify.subscribeAuth(async (amp) => {
 
 export async function checkUser() {
 	const currentUser = await Auth.currentAuthenticatedUser({
-		// a.s. bypassCache: true // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+		passCache: true // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
 	});
 
 	console.log('checkUser', {

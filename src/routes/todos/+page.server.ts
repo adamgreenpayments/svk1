@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 import { api } from './api';
-import type { PageServerLoad, Actions } from './$types';
 
 type Todo = {
 	uid: string;

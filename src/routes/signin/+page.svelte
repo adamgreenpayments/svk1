@@ -1,71 +1,66 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { SignIn } from '$lib/Auth/aws';
-  import authUser from '../../stores/auth';
-  import { isEmpty, isValidEmail } from '../../helpers/validation.js';
-  import { createEventDispatcher } from 'svelte';
-	import { Button, FluidForm, TextInput,PasswordInput } from 'carbon-components-svelte';
+	import { onMount, onDestroy, getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import { goto, afterNavigate } from '$app/navigation';
+	import { SignIn } from '$lib/Auth/aws';
+	import { isEmpty, isValidEmail } from '../../helpers/validation.js';
+	import { Button, FluidForm, TextInput, PasswordInput, Loading } from 'carbon-components-svelte';
+	import type { CognitoUser } from '@aws-amplify/auth';
+	import { base } from '$app/paths';
 
+	let previousPage: string = base;
 
+	afterNavigate(({ from }) => {
+		previousPage = from?.url.pathname || previousPage;
+		console.log('prev paghe2', previousPage);
+	});
+	const authStore: Writable<CognitoUser | undefined> = getContext('authStore');
 
-  if($authUser) goto("/");
-    
-      let password:String;
-      let invalid = false;
-    
-      $: invalid = !/^(?=.*[a-z])(?=.*d)[a-zA-Zd]{6,}$/.test(password);
-  let email = '';
-  let isLoggingIn = false;
-  let unsubscribe;
-  let cognitoUser;
-  let dispatch = createEventDispatcher();
-  $: emailValid = isValidEmail(email);
-  $: formIsValid = emailValid;
+	$: console.log('prev paghe', previousPage);
 
-  // import { base } from '$app/paths'
+	let password: string;
+	let invalid = false;
+	$: invalid = !/^(?=.*[a-z])(?=.*d)[a-zA-Zd]{6,}$/.test(password);
+	let email = '';
+	let isLoggingIn = false;
+	$: emailValid = isValidEmail(email);
+	$: formIsValid = emailValid;
 
-  // let previousPage = base ;
+	function handleSignIn() {
+		console.log('resssspooop king');
+		isLoggingIn = true;
+		const res = SignIn(email, password);
+		console.log('resssspooop', res);
+		res.then((value) => {
+			console.log('resssspooop2', value);
+			authStore.set(value);
+			console.log('prev paghe3', previousPage);
+			goto(previousPage);
+			isLoggingIn = false;
+		});
+	}
 
-  // afterNavigate(({from}) => {
-  //   previousPage = from?.url.pathname || previousPage
-  // }) 
+	onMount(async () => {});
 
-  async function handleSignIn() {
-    isLoggingIn = true;
-    const urlParams = new URLSearchParams(window.location.search);
-    const path = urlParams.get("path") == null  ?  '/' : urlParams.get("path").toString() ;
-    console.log("urlParams: ", path)
-    const res = await SignIn(email, password);
-    authUser.setauthUser(res);
-    dispatch('login');
-    isLoggingIn = false;
-    goto(path);
-  }
-
-  onMount(() => {
-    unsubscribe = authUser.subscribe((user) => {
-      cognitoUser = user;
-      console.log('signIn', { cognitoUser });
-    });
-  });
-
-  onDestroy(() => {
-    if (unsubscribe) unsubscribe();
-  });
+	onDestroy(() => {});
 </script>
 
 <svelte:head>
-  <title>Sign In</title>
+	<title>Sign In</title>
 </svelte:head>
 
 <main>
-  {#if isLoggingIn}
-  {/if}
-
-  <form on:submit|preventDefault={handleSignIn}>
-    <FluidForm class="w-2/5 mx-auto">
-      <!-- <TextInput labelText="User name" placeholder="Enter user name..." required />
+	{#if isLoggingIn}
+		<div class="w-2/5 mx-auto">
+			<Loading description="Active loading indicator" withOverlay={false} />
+		</div>
+	{:else if $authStore}
+		{console.log('prev paghe4', previousPage)}
+		{goto(previousPage)}
+	{:else}
+		<!-- <form on:submit|preventDefault={handleSignIn}> -->
+		<FluidForm class="w-2/5 mx-auto">
+			<!-- <TextInput labelText="User name" placeholder="Enter user name..." required />
       <PasswordInput
         bind:value={password}
         {invalid}
@@ -76,39 +71,39 @@
         placeholder="Enter password..."
       /> -->
 
-      <TextInput
-        id="email"
-        label="E-Mail"
-        type="email"
-        placeholder="Email"
-        invalid={!emailValid}
-        invalidText="Please enter a valid email address."
-        value={email}
-        on:input={(event) => {
-          console.log("big poopy");
-          console.log(event);
-          (email = event.detail)}
-        }
-      />
+			<TextInput
+				id="email"
+				label="E-Mail"
+				type="email"
+				placeholder="Email"
+				invalid={!emailValid}
+				invalidText="Please enter a valid email address."
+				value={email}
+				on:input={(event) => {
+					console.log('big poopy');
+					console.log(event);
+					email = event.detail;
+				}}
+			/>
 
-      <TextInput
-        id="Password"
-        label="Password"
-        type="password"
-        placeholder="Password"
-        value={password}
-        on:input={(event) => {
-          console.log("big poopy2");
-          console.log(event);
-          (password = event.detail)}
-        }
-        autocomplete="on"
-      />
-      <Button type="submit" disabled={!formIsValid}>Sign In</Button> 
+			<TextInput
+				id="Password"
+				label="Password"
+				type="password"
+				placeholder="Password"
+				value={password}
+				on:input={(event) => {
+					console.log('big poopy2');
+					console.log(event);
+					password = event.detail;
+				}}
+				autocomplete="on"
+			/>
+			<Button type="submit" on:click={handleSignIn} disabled={!formIsValid}>Sign In</Button>
+		</FluidForm>
 
-    </FluidForm>
-
-  </form>
+		<!-- </form> -->
+	{/if}
 </main>
 
 <style>

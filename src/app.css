@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 .bx--header {
-    background-color: hsl(var(--b3)) !important;
+    background-color: hsl(var(--p)) !important;
 }
 
 .bx--header-panel {
-    background-color: hsl(var(--b3)) !important;
+    background-color: hsl(var(--p)) !important;
+}
+
+.bx--side-nav__menu {
+    visibility: visible !important;
 }

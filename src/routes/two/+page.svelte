@@ -4,24 +4,20 @@
     return { user };
   }
 </script> -->
-
-<script>
-  import authUser from '$stores/auth';
-  import { getStores, navigating, page } from '$app/stores';
+<script lang="ts">
+	import { getContext } from 'svelte';
+	import { getStores, navigating, page } from '$app/stores';
 	import { Datepicker } from 'svelte-calendar';
+	import type { CognitoUser } from '@aws-amplify/auth';
+	import type { Writable } from 'svelte/store';
+	const authStore: Writable<CognitoUser | undefined> = getContext('authStore');
 
-  export let loggedInUser;
-  authUser.subscribe((user) => {
-				if (user) {
-					loggedInUser = user.attributes;
-				}
-			});
-  $: console.log('two:', { loggedInUser });
+	$: console.log('two:', { $authStore });
 </script>
-{#if loggedInUser}
-logged in poop {loggedInUser.email}
-<Datepicker />
-{:else}
-poop poop
-{/if}
 
+{#if $authStore}
+	logged in poop {$authStore.getUsername()}
+	<Datepicker />
+{:else}
+	poop poop
+{/if}

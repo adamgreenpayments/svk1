@@ -27,7 +27,7 @@ export default {
 		// specifying a different adapter
 		// adapter: node(),
 		adapter: adapter({
-			autoDeploy: true,
+			autoDeploy: false,
 			FQDN: "omniaccept.adambasloe.com"
 		})
 		// hydrate the <div id="svelte"> element in src/app.html
